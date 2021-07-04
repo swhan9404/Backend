@@ -4,5 +4,7 @@ from . import views
 app_name = 'concept'
 
 urlpatterns = [
-    path('', views.search),
+    path('concept', views.concept),
+    path('condition', views.condition_occurence),
+
 ]

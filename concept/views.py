@@ -11,8 +11,8 @@ from django.db import connection
 from django.db.models import Count
 
 @api_view(['get'])
-def search(request) :
-    # concept/?keyword=&page=
+def concept(request) :
+    # search/concept/?keyword=&page=
     keyword = request.GET.get('keyword', '')
     page= int(request.GET.get('page', 1))
     
@@ -33,4 +33,42 @@ def search(request) :
     serializer.is_valid()
     return Response(serializer.data)
 
-     
+
+@api_view(['get'])
+def condition_occurence(request) :
+
+    keyword = request.GET.get('keyword', '')
+    page= int(request.GET.get('page', 1))
+
+    cursor= connection.cursor()
+    sql = """
+    SELECT co.condition_occurrence_id, co.person_id, co.condition_concept_id, c1.concept_name as condition_concept_name,
+    co.condition_start_date, co.condition_start_datetime, co.condition_end_date, co.condition_end_datetime, co.condition_type_concept_id, c2.concept_name as condition_type_concept_name,
+    co.condition_status_concept_id, c3.concept_name as condition_status_concept_name, 
+    co.stop_reason, co.provider_id, co.visit_occurrence_id, co.visit_detail_id, co.condition_source_value, co.condition_source_concept_id, co.condition_status_source_value
+    FROM condition_occurrence co
+    LEFT OUTER JOIN concept c1
+    ON co.condition_concept_id=c1.concept_id
+    LEFT OUTER JOIN concept c2
+    ON co.condition_type_concept_id=c2.concept_id
+    LEFT OUTER JOIN concept c3
+    ON co.condition_status_concept_id=c3.concept_id
+    ORDER BY condition_occurrence_id
+    """+ f"OFFSET {(page-1)*10} LIMIT 10;"
+
+    cursor.execute(sql)
+    row = cursor.fetchall()
+
+    column_name = ['condition_occurrence_id', 'person_id', 'condition_concept_id', 'condition_concept_name',
+        'condition_start_date', 'condition_start_datetime', 'condition_end_date', 'condition_end_datetime', 'condition_type_concept_id', 'condition_type_concept_name',
+        'condition_status_concept_id', 'condition_status_concept_name', 
+        'stop_reason', 'provider_id', 'visit_occurrence_id', 'visit_detail_id', 'condition_source_value', 'condition_source_concept_id', 'condition_status_source_value']
+    
+    data = []
+    for tmp in row :
+        tmp_dic = {}
+        for i in range(len(tmp)) :
+            tmp_dic[column_name[i]] = tmp[i]
+        data.append(tmp_dic)
+
+    return Response(data)
