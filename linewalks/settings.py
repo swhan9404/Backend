@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'patient',
+    'visit',
 
     'django.contrib.admin',
     'django.contrib.auth',

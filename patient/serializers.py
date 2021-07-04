@@ -1,13 +1,8 @@
 from rest_framework import serializers
 
-from .models import Person, Concept, Death
+from .models import Person, Death
 
 
-class ConceptSerializer(serializers.ModelSerializer):
-
-    class Meta : 
-        model = Concept
-        fields = "__all__"
 
 class PersonSerializer(serializers.ModelSerializer):
 
