@@ -10,13 +10,17 @@
 메일로 전달된 내용 
 ```
 
+6. `python manage.py makemigrations`
+7. `python manage.py migrate`
+8. `python manage.py runserver`
+
 
 
 # Swagger
 
 - `http://127.0.0.1:8000/swagger/` 주소로 들어가면 확인하실 수 있습니다.
 
-![image-20210704231211205](README.assets/image-20210704231211205.png)
+![image-20210705002124724](README.assets/image-20210705002124724.png)
 
 
 
