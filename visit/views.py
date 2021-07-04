@@ -4,7 +4,8 @@ from rest_framework import status
 
 from django.shortcuts import render
 from django.db.models import Count
-from .models import VisitOccurrence, Concept
+from .models import VisitOccurrence
+from concept.models import Concept
 
 from django.db import connection
 from datetime import datetime
