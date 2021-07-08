@@ -12,6 +12,11 @@ from django.db.models import Count
 
 @api_view(['get'])
 def concept(request) :
+    """ 심각하게 오래걸림
+    SELECT COUNT(*) AS "__count"
+    FROM "concept"
+    WHERE ("concept"."concept_name"::text LIKE '%%' OR "concept"."domain_id"::text LIKE '%%' OR "concept"."concept_class_id"::text LIKE '%%')
+    """
     # search/concept/?keyword=&page=
     keyword = request.GET.get('keyword', '')
     page= int(request.GET.get('page', 1))
@@ -34,6 +39,7 @@ def concept(request) :
     return Response(serializer.data)
 
 
+
 @api_view(['get'])
 def condition_occurence(request) :
 
@@ -54,7 +60,10 @@ def condition_occurence(request) :
     LEFT OUTER JOIN concept c3
     ON co.condition_status_concept_id=c3.concept_id
     ORDER BY condition_occurrence_id
-    """+ f"OFFSET {(page-1)*10} LIMIT 10;"
+    OFFSET {page_num} LIMIT 10;
+    """.format(
+        page_num=(page-1)*10
+    )
 
     cursor.execute(sql)
     row = cursor.fetchall()

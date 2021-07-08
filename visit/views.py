@@ -13,6 +13,12 @@ from datetime import datetime
 # Create your views here.
 @api_view(['get'])
 def total(request) : # foreign key 가 아니라서 ORM 상에서 JOIN 이 안됨;;
+    """
+    SELECT "visit_occurrence"."visit_concept_id",
+       COUNT("visit_occurrence"."visit_concept_id") AS "visit_concept_id__count"
+    FROM "visit_occurrence"
+    GROUP BY "visit_occurrence"."visit_concept_id"
+    """
     data = VisitOccurrence.objects.values('visit_concept_id').annotate(Count('visit_concept_id'))
 
     for tmp in data : # JOIN 안해서 생긴 불필요한 반복문(N+1 문제)
