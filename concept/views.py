@@ -59,10 +59,14 @@ def condition_occurence(request) :
     ON co.condition_type_concept_id=c2.concept_id
     LEFT OUTER JOIN concept c3
     ON co.condition_status_concept_id=c3.concept_id
+    WHERE c1.concept_name LIKE '%{keyword}%' OR
+        c2.concept_name LIKE '%{keyword}%' OR
+        c3.concept_name LIKE '%{keyword}%' 
     ORDER BY condition_occurrence_id
     OFFSET {page_num} LIMIT 10;
     """.format(
-        page_num=(page-1)*10
+        keyword=keyword,
+        page_num=(page-1)*10,
     )
 
     cursor.execute(sql)
